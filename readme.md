@@ -57,4 +57,4 @@ Usage: `python test-auth.py <username> <node URL>`
 Withdraw coins and hours from user to external address
 Usage: `python test-withdraw.py <node URL> <username> <address> <coins> <hours>`
 ## Instalation
-`pip install requests, nacl, pynacl, pycryptodome, validators, lxml`
+`pip install requests pynacl pycryptodome validators lxml`
