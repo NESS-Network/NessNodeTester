@@ -22,46 +22,37 @@ class AuthTester:
         f = open("out/keys/node/" + filename, "r")
         return json.loads(f.read())
 
-    def test(self, username: str, node_url: str):
+    def test(self, node_url: str, username: str, address: str, coins: float, hours: int):
         ness_auth = NessAuth()
         user = self.loadUser(username)
         node = self.loadNode(node_url)
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
-        result = ness_auth.get_by_auth_id(node_url + "/node/test/auth", user_private_key, node_url, node["nonce"], username,
-                                          user["nonce"])
+        wdata = json.dumps({'coins': coins, 'hours': hours, 'to_addr': address})
+        url = node_url + "/node/withdraw"
+
+        result = ness_auth.get_by_two_way_encryption(url, wdata, node['public'], user_private_key, username)
 
         if result['result'] == 'error':
-            print(" ~~~ TEST #1 Auth ID FAILED ~~~ ")
-            print(result['error'])
-        else:
-            print(" *** TEST #1 Auth ID OK !!! *** ")
-            print(result['message'])
-
-        test_string = 'The state calls its own violence law, but that of the individual, crime.'
-        url = node_url + "/node/test/auth"
-
-        result = ness_auth.get_by_two_way_encryption(url, test_string, node['public'], user_private_key, username)
-
-        if result['result'] == 'error':
-            print(" ~~~ TEST #2 Two way encryption FAILED ~~~ ")
+            print(" ~~~ Withdraw failed ~~~ ")
             print(result['error'])
         else:
             if ness_auth.verify_two_way_result(node['verify'], result):
-                print(" *** TEST #2 Two way encryption OK !!! *** ")
+                print(" *** Withdraw OK *** ")
+                print("Nodes answer: ")
                 print(ness_auth.decrypt_two_way_result(result, user_private_key))
             else:
-                print(" ~~~ TEST #2 Two way encryption FAILED ~~~ ")
+                print(" ~~~ Withdraw FAILED ~~~ ")
                 print(" Verifying signature failed ")
 
         return True
 
 
-print('Test authentication')
+print('Test withdraw')
 
-if len(sys.argv) == 3:
+if len(sys.argv) == 6:
     tester = AuthTester()
-    tester.test(sys.argv[1], sys.argv[2])
+    tester.test(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]), int(sys.argv[5]))
 else:
-    print('Usage: python test-auth.py <username> <node URL>')
+    print('Usage: python test-withdraw.py <node URL> <username> <address> <coins> <hours>')

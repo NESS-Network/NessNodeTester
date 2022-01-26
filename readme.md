@@ -1,5 +1,5 @@
 # NESS Node Tester - test suit for NESS nodes
-* codegen.py
+### codegen.py
 
  Private and public code generation for user (client) and node
 
@@ -43,18 +43,18 @@ python codegen.py --version
 python codegen.py -h
 python codegen.py --help
 ```
-* configen.py
-
+### configen.py
  Configuration generation for node
- 
  Usage: `python configen.py <node URL>`
-* test-auth.py
-
+### test-auth.py
  Authentication testing
-
  Run after codegen.py
- 
  Usage: `python test-auth.py <username> <node URL>`
-
+###  test-user.py
+Request information about user
+Usage: `python test-auth.py <username> <node URL>`
+### test-withdraw.py
+Withdraw coins and hours from user to external address
+Usage: `python test-withdraw.py <node URL> <username> <address> <coins> <hours>`
 ## Instalation
 `pip install requests, nacl, pynacl, pycryptodome, validators, lxml`

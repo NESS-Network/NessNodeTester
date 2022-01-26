@@ -1,6 +1,8 @@
 out/config/*.json
 out/keys/node/*.json
 out/keys/user/*.json
+in/nodes/*.json
+in/config/*.json
 test.py
 venv
 venv/*

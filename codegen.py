@@ -53,7 +53,7 @@ class Codegen:
         etree.tostring(worm, pretty_print=True)
         f.close()
 
-    def generate_node(self, url, tags: str):
+    def generate_node(self, url: str, tariff: int, master_user: str, tags: str):
         if not os.path.exists('out'):
             os.mkdir('out')
 
@@ -70,7 +70,9 @@ class Codegen:
 
         node = {
             'url': url,
+            'tariff': tariff,
             'tags': tags,
+            'master-user': master_user,
             'private': keypair[0],
             'verify': keypair[1],
             'public': keypair[2],
@@ -142,8 +144,8 @@ class Codegen:
 
         worm = "<worm>"+linesep+\
             tab + "<node type=\"ness\" url=\"" + node["url"] + "\" nonce=\"" + node["nonce"] + "\"   " + \
-            " verify=\"" + node["verify"] + "\" public=\"" + node["public"] + "\" tags=\"" + \
-            node["tags"] + "\">" + linesep + \
+            " verify=\"" + node["verify"] + "\" public=\"" + node["public"] + "\" master-user=\"" + \
+            node["master-user"] + "\" tariff=\"" + node["tariff"] + "\" tags=\"" + node["tags"] + "\">" + linesep + \
             tab2 + "<!-- Here tags may be different for each type of node or each node -->" + linesep + \
             tab + "</node>" + linesep + \
             "</worm>"
@@ -258,8 +260,11 @@ class Terminal:
         print("python codegen.py -usw username")
         print("python codegen.py --user-show-worm username")
         print("#### Generate node")
-        print("python codegen.py -ng http://my-ness-node.net \"Test,My test node,Hello world\"")
-        print("python codegen.py --node-generate http://my-ness-node.net \"Test,My test node,Hello world\"")
+        print("python codegen.py -ng http://my-ness-node.net 1 master-user-name \"Test,My test node,Hello world\"")
+        print("python codegen.py --node-generate "
+              "http://my-ness-node.net 24 master-user-name \"Test,My test node,Hello world\"")
+        print("  master-user-name - username of existing user, which will became owner of funds of this node")
+        print("  24 - tariff, ammount of NCH payed to node (master-user address) every 24 hours ")
         print("  \"Test,My test node,Hello world\" - coma separated tags")
         print("#### Show generated node")
         print("python codegen.py -ns http://my-ness-node.net")
@@ -290,11 +295,11 @@ class Terminal:
         codegen = Codegen()
         codegen.show_user_worm(username)
 
-    def __node_generate(self, url: str, tags: str):
+    def __node_generate(self, url: str, tariff: int, master_user: str, tags: str):
         if validators.url(url):
             # print(url)
             codegen = Codegen()
-            codegen.generate_node(url, tags)
+            codegen.generate_node(url, tariff, master_user, tags)
             print("Node '" + url + "' generated OK")
             return True
         else:
@@ -326,11 +331,13 @@ class Terminal:
     def process(self):
         if len(sys.argv) >= 2:
             mode = sys.argv[1].lower()
-            if len(sys.argv) == 4 and (mode == '-ng' or mode == '--node-generate'):
+            if len(sys.argv) == 6 and (mode == '-ng' or mode == '--node-generate'):
                 url = sys.argv[2]
-                tags = sys.argv[3]
+                tariff = sys.argv[3]
+                master_user = sys.argv[4]
+                tags = sys.argv[5]
 
-                if not self.__node_generate(url, tags):
+                if not self.__node_generate(url, tariff, master_user, tags):
                     self.__manual()
 
             elif len(sys.argv) == 6 and (mode == '-ug' or mode == '--user-generate'):

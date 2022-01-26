@@ -15,7 +15,6 @@ class NessAuth:
                        user_nonce: str):
         auth_id = self.auth_id(user_private_key, node_url, node_nonce, username, user_nonce)
         url = node_full_url + "/" + username + "/" + urllib.parse.quote_plus(auth_id)
-
         return json.loads(requests.get(url).text)
 
     def get_by_two_way_encryption(self, node_full_url: str, data: str, node_public_key: str, user_private_key: str,

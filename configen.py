@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 import urllib.parse
 
@@ -21,7 +22,9 @@ class Configen:
             "private": node["private"],
             "public": node["public"],
             "url": node["url"],
-            "verify": node["verify"]
+            "tariff": node["tariff"],
+            "verify": node["verify"],
+            "master-user": node["master-user"]
         }
 
         filename = "out/config/node.json"
@@ -39,6 +42,17 @@ class Configen:
         f = open(filename, "w")
         f.write(json.dumps(config_emer, indent=4, sort_keys=True))
 
+        config_ness = {
+            "host": "localhost",
+            "port": 6420,
+            "wallet_id": "wallet.wlt",
+            "password": "password"
+        }
+
+        filename = "out/config/ness.json"
+        f = open(filename, "w")
+        f.write(json.dumps(config_ness, indent=4, sort_keys=True))
+
         config_prng = {
             "seed": "/tmp/seed.txt",
             "seed-big": "/tmp/seed-big.txt",
@@ -49,6 +63,13 @@ class Configen:
         filename = "out/config/prng.json"
         f = open(filename, "w")
         f.write(json.dumps(config_prng, indent=4, sort_keys=True))
+
+        users_addresses = {}
+
+        filename = "out/config/users_addr.json"
+        f = open(filename, "w")
+        f.write(json.dumps(users_addresses, indent=4, sort_keys=True))
+        os.chmod(filename, 0o666)
 
 
 if len(sys.argv) == 2:
