@@ -45,16 +45,27 @@ python codegen.py --help
 ```
 ### configen.py
  Configuration generation for node
+
  Usage: `python configen.py <node URL>`
 ### test-auth.py
  Authentication testing
  Run after codegen.py
+
  Usage: `python test-auth.py <username> <node URL>`
 ###  test-user.py
 Request information about user
+
 Usage: `python test-auth.py <username> <node URL>`
 ### test-withdraw.py
 Withdraw coins and hours from user to external address
+
 Usage: `python test-withdraw.py <node URL> <username> <address> <coins> <hours>`
+```
+<node URL> - node URL
+<username> - Your username
+<address> - External address
+<coins> - Ammount of coins to withdraw
+<hours> - Ammount of hours to withdraw
+```
 ## Instalation
 `pip install requests pynacl pycryptodome validators lxml`

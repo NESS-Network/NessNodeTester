@@ -56,3 +56,8 @@ if len(sys.argv) == 6:
     tester.test(sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4]), int(sys.argv[5]))
 else:
     print('Usage: python test-withdraw.py <node URL> <username> <address> <coins> <hours>')
+    print('<node URL> - node URL')
+    print('<username> - Your username')
+    print('<address> - External address')
+    print('<coins> - Ammount of coins to withdraw')
+    print('<hours> - Ammount of hours to withdraw')
