@@ -55,7 +55,7 @@ python codegen.py --help
 ###  test-user.py
 Request information about user
 
-Usage: `python test-auth.py <username> <node URL>`
+Usage: `python test-user.py <username> <node URL>`
 ### test-withdraw.py
 Withdraw coins and hours from user to external address
 
