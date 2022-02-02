@@ -47,17 +47,24 @@ python codegen.py --help
  Configuration generation for node
 
  Usage: `python configen.py <node URL>`
+
+## Testing of the node
+* All users must be generated and stored in emercoin blockchain
+
 ### test-auth.py
  Authentication testing
  Run after codegen.py
 
  Usage: `python test-auth.py <username> <node URL>`
 ###  test-user.py
-Request information about user
+Request information about existing user
+ * Address (is no address exists than it will be created)
+ * Current balance (Coins and Hours, fee)
+ * Is user active (has enough balance to use node)
 
 Usage: `python test-user.py <username> <node URL>`
 ### test-withdraw.py
-Withdraw coins and hours from user to external address
+Withdraw coins and hours from existing user to external address
 
 Usage: `python test-withdraw.py <node URL> <username> <address> <coins> <hours>`
 ```
