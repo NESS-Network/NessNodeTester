@@ -76,3 +76,7 @@ Usage: `python test-withdraw.py <node URL> <username> <address> <coins> <hours>`
 ```
 ## Instalation
 `pip install requests pynacl pycryptodome validators lxml`
+
+## Links
+* Ness node https://github.com/NESS-Network/NessNode
+* Dev blog  https://ness-main-dev.medium.com
