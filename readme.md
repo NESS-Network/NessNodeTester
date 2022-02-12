@@ -74,6 +74,14 @@ Usage: `python test-withdraw.py <node URL> <username> <address> <coins> <hours>`
 <coins> - Ammount of coins to withdraw
 <hours> - Ammount of hours to withdraw
 ```
+###  test_prng.py
+Test PRNG service
+
+Usage: `python test-user.py <username> <node URL>`
+```
+<node URL> - node URL
+<username> - Your username
+```
 ## Instalation
 `pip install requests pynacl pycryptodome validators lxml`
 
