@@ -39,6 +39,36 @@ class AuthTester:
             print(" *** SEED OK !!! *** ")
             print(result['data']['seed'])
 
+        result = ness_auth.get_by_auth_id(node_url + "/prng/seedb", user_private_key, node_url, node["nonce"], username,
+                                          user["nonce"])
+
+        if result['result'] == 'error':
+            print(" ~~~ FAILED ~~~ ")
+            print(result['error'])
+        else:
+            print(" *** SEED BIG OK !!! *** ")
+            print(result['data']['seedb'])
+
+        result = ness_auth.get_by_auth_id(node_url + "/prng/numbers", user_private_key, node_url, node["nonce"], username,
+                                          user["nonce"])
+
+        if result['result'] == 'error':
+            print(" ~~~ FAILED ~~~ ")
+            print(result['error'])
+        else:
+            print(" *** NUMBERS OK !!! *** ")
+            print(result['data']['numbers'])
+
+        result = ness_auth.get_by_auth_id(node_url + "/prng/numbersb", user_private_key, node_url, node["nonce"], username,
+                                          user["nonce"])
+
+        if result['result'] == 'error':
+            print(" ~~~ FAILED ~~~ ")
+            print(result['error'])
+        else:
+            print(" *** NUMBERS BIG OK !!! *** ")
+            print(result['data']['numbersb'])
+
 
         return True
 
