@@ -27,8 +27,10 @@ python codegen.py --user-show username
 python codegen.py -usw username
 python codegen.py --user-show-worm username
 #### Generate node
-python codegen.py -ng http://my-ness-node.net "Test,My test node,Hello world"
-python codegen.py --node-generate http://my-ness-node.net "Test,My test node,Hello world"
+python codegen.py -ng http://my-ness-node.net 1 master-user-name "Test,My test node,Hello world"
+python codegen.py --node-generate http://my-ness-node.net 24 master-user-name "Test,My test node,Hello world"
+  master-user-name - username of existing user, which will became owner of funds of this node
+  24 - tariff, ammount of NCH payed to node (master-user address) every 24 hours 
   "Test,My test node,Hello world" - coma separated tags
 #### Show generated node
 python codegen.py -ns http://my-ness-node.net
