@@ -23,7 +23,7 @@ class NessAuth:
         :type user_private_key: str
         :param node_url: The URL of the node you're connecting to
         :type node_url: str
-        :param node_nonce: The nonce of the node you're connecting to
+        :param node_nonce: cryptographic salt
         :type node_nonce: str
         :param username: The username of the user who is connecting to node
         :type username: str
