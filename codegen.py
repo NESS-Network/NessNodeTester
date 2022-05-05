@@ -93,7 +93,7 @@ class Codegen:
 
         # Prng config
 
-    def generate_user(self, username: str, keypair_cnt: int, keys: tuple, tags: str):
+    def generate_user(self, username: str, keypair_cnt: int, keys: dict, tags: str):
         if not os.path.exists('out'):
             os.mkdir('out')
 
@@ -109,11 +109,11 @@ class Codegen:
         key_pairs = self.__keypairs(keypair_cnt)
         singles = {}
 
-        for single in keys:
-            if str(single[1]).lower() == 'aes':
-                singles.update(self.__aes(int(single[0]), int(single[2])))
-            elif str(single[1]).lower() == 'blowfish':
-                singles.update(self.__blowfish(int(single[0]), int(single[2])))
+        for keyname in keys:
+            if str(keys[keyname][0]).lower() == 'aes':
+                singles[keyname] = self.__aes(int(keys[keyname][1]))
+            elif str(keys[keyname][0]).lower() == 'blowfish':
+                singles[keyname] = self.__blowfish(int(keys[keyname][1]))
 
         user = {
             'application': {'name': 'Codegen', 'ver': '0.1'},
@@ -182,27 +182,23 @@ class Codegen:
 
         return worm
 
-    def __key(self, byte: int = 32):
+    def __key(self, byte: int):
         key = get_random_bytes(byte)
         return b64encode(key).decode('utf-8')
 
-    def __aes(self, count: int, _bytes: int = 32):
-        ciphers = []
-        for i in range(0, count):
-            _key = self.__key(_bytes)
-            h = SHA256.new()
-            h.update(_key.encode('utf-8'))
-            ciphers.append({h.hexdigest(): _key})
-        return {'aes': ciphers}
+    def __aes(self, _bytes: int):
+        _key = self.__key(_bytes)
+        h = SHA256.new()
+        h.update(_key.encode('utf-8'))
+        _hash = h.hexdigest()
+        return {'key': _key, 'type': 'AES', 'bytes': _bytes, 'hash': _hash}
 
-    def __blowfish(self, count: int, _bytes: int = 32):
-        ciphers = []
-        for i in range(0, count):
-            _key = self.__key(_bytes)
-            h = SHA256.new()
-            h.update(_key.encode('utf-8'))
-            ciphers.append({h.hexdigest(): _key})
-        return {'blowfish': ciphers}
+    def __blowfish(self, _bytes: int):
+        _key = self.__key(_bytes)
+        h = SHA256.new()
+        h.update(_key.encode('utf-8'))
+        _hash = h.hexdigest()
+        return {'key': _key, 'type': 'Blowfish', 'bytes': _bytes, 'hash': _hash}
 
     def __keypair(self):
         signing_key = SigningKey.generate()
@@ -247,11 +243,11 @@ class Terminal:
         print(" 'out/keys/user/*.key.json' - generated users")
         print("### USAGE:")
         print("#### Generate user")
-        print("python codegen.py -ug username 10 \"1,blowfish,16;1,aes,8\" \"Hello World,test\"")
-        print("python codegen.py --user-generate username 10 \"1,blowfish,16;1,aes,8\" \"Hello World,test\"")
+        print("python codegen.py -ug username 10 \"Main,blowfish,16;Second,aes,8\" \"Hello World,test\"")
+        print("python codegen.py --user-generate username 10 \"Main,blowfish,16;Second,aes,8\" \"Hello World,test\"")
         print("  Generates user with username 'username' with 10 keypairs")
-        print("  1,blowfish,16 - generate 1 Blowfish cipher 16 bytes long")
-        print("  1,aes,8 - generate 1 AES cipher 8 bytes long")
+        print("  Main,blowfish,16 - generate Blowfish cipher 16 bytes long with name 'First'")
+        print("  Second,aes,8 - generate AES cipher 8 bytes long with name 'Second'")
         print("  \"Hello World,test\" - coma separated tags")
         print("#### Show generated user")
         print("python codegen.py -us username")
@@ -308,15 +304,14 @@ class Terminal:
 
     def __user_generate(self, username: str, keys_count: int, keys: str, tags: str):
         keys_list = keys.split(';')
-        final_keys = []
+        final_keys = {}
 
         for key_full in keys_list:
             key_full_list = key_full.split(',')
             if len(key_full_list) == 3:
-                if self.__is_integer(key_full_list[0]) \
-                  and self.__is_cipher(key_full_list[1]) \
+                if self.__is_cipher(key_full_list[1]) \
                   and self.__is_integer(key_full_list[2]):
-                    final_keys.append(key_full_list)
+                    final_keys[key_full_list[0]] = (key_full_list[1], key_full_list[2])
                 else:
                     print("Ciphers_Count(1+),Cipher_Name(blowfish or aes),Cipher_Bytes; ... ")
                     return False
