@@ -14,11 +14,11 @@
  'out/keys/user/*.key.json' - generated users
 ### USAGE:
 #### Generate user
-python codegen.py -ug username 10 "1,blowfish,16;1,aes,8" "Hello World,test"
-python codegen.py --user-generate username 10 "1,blowfish,16;1,aes,8" "Hello World,test"
+python codegen.py -ug username 10 "Main,blowfish,16;Second,aes,8" "Hello World,test"
+python codegen.py --user-generate username 10 "Main,blowfish,16;Second,aes,8" "Hello World,test"
   Generates user with username 'username' with 10 keypairs
-  1,blowfish,16 - generate 1 Blowfish cipher 16 bytes long
-  1,aes,8 - generate 1 AES cipher 8 bytes long
+  Main,blowfish,16 - generate Blowfish cipher 16 bytes long with name 'First'
+  Second,aes,8 - generate AES cipher 8 bytes long with name 'Second'
   "Hello World,test" - coma separated tags
 #### Show generated user
 python codegen.py -us username
