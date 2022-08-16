@@ -29,15 +29,25 @@ class AuthTester:
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
-        result = ness_auth.get_by_auth_id(node_url + "/node/get-address", user_private_key, node_url, node["nonce"], username,
+        result = ness_auth.get_by_auth_id(node_url + "/node/join", user_private_key, node_url, node["nonce"], username,
                                           user["nonce"])
 
         if result['result'] == 'error':
-            print(" ~~~ TEST #1 GetAddress() FAILED ~~~ ")
+            print(" ~~~ TEST #1 join() FAILED ~~~ ")
             print(result['error'])
         else:
-            print(" *** TEST #1 GetAddress() OK !!! *** ")
+            print(" *** TEST #1 join() OK !!! *** ")
             print(result['data']['address'])
+
+        result = ness_auth.get_by_auth_id(node_url + "/node/joined", user_private_key, node_url, node["nonce"], username,
+                                          user["nonce"])
+
+        if result['result'] == 'error':
+            print(" ~~~ TEST #1 joined() FAILED ~~~ ")
+            print(result['error'])
+        else:
+            print(" *** TEST #1 joined() OK !!! *** ")
+            print(result['data']['joined'])
 
         result = ness_auth.get_by_auth_id(node_url + "/node/balance", user_private_key, node_url, node["nonce"], username,
                                           user["nonce"])

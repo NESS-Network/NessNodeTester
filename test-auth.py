@@ -26,10 +26,11 @@ class AuthTester:
         ness_auth = NessAuth()
         user = self.loadUser(username)
         node = self.loadNode(node_url)
+        url = node_url + "/node/test/auth"
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
-        result = ness_auth.get_by_auth_id(node_url + "/node/test/auth", user_private_key, node_url, node["nonce"], username,
+        result = ness_auth.get_by_auth_id(url, user_private_key, node_url, node["nonce"], username,
                                           user["nonce"])
 
         if result['result'] == 'error':
@@ -40,7 +41,6 @@ class AuthTester:
             print(result['message'])
 
         test_string = 'The state calls its own violence law, but that of the individual, crime.'
-        url = node_url + "/node/test/auth"
 
         result = ness_auth.get_by_two_way_encryption(url, test_string, node['public'], user_private_key, username)
 
