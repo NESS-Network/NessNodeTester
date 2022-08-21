@@ -2,6 +2,7 @@ import json
 import sys
 import urllib.parse
 from lib.NessAuth import NessAuth
+from Crypto.Hash import MD5
 
 
 class AuthTester:
@@ -28,6 +29,10 @@ class AuthTester:
         node = self.loadNode(node_url)
 
         user_private_key = user['keys']["private"][user['keys']['current']]
+
+        h = MD5.new()
+        h.update(username.encode('utf8'))
+        username = h.hexdigest()
 
         result = ness_auth.get_by_auth_id(node_url + "/node/join", user_private_key, node_url, node["nonce"], username,
                                           user["nonce"])

@@ -13,7 +13,7 @@ import requests
 class NessAuth:
 
     def get_by_auth_id(self, node_full_url: str, user_private_key: str, node_url: str, node_nonce: str, username: str,
-                       user_nonce: str):
+                       userhash: str, user_nonce: str):
         """
         Authenticate user by Authentication ID and return data from the node
         
@@ -32,7 +32,8 @@ class NessAuth:
         :return: Data returned by the node.
         """
         auth_id = self.auth_id(user_private_key, node_url, node_nonce, username, user_nonce)
-        url = node_full_url + "/" + username + "/" + urllib.parse.quote_plus(auth_id)
+        url = node_full_url + "/" + userhash + "/" + urllib.parse.quote_plus(auth_id)
+
         return json.loads(requests.get(url).text)
 
 
@@ -84,7 +85,7 @@ class NessAuth:
         :type user_private_key: str
         :return: The decrypted data.
         """
-        return self.decrypt(b64decode(result['data']), node_private_key)
+        return self.decrypt(b64decode(result['data']), user_private_key)
 
     def auth_id(self, private_key: str, node_url, node_nonce: str, username: str, user_nonce: str):
         """

@@ -2,6 +2,7 @@ import json
 import sys
 import urllib.parse
 from lib.NessAuth import NessAuth
+from Crypto.Hash import MD5
 
 
 class AuthTester:
@@ -30,8 +31,13 @@ class AuthTester:
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
+        h = MD5.new()
+        userhash = username + '-' + node_url + '-' + node["nonce"]
+        h.update(userhash.encode('utf8'))
+        userhash = h.hexdigest()
+
         result = ness_auth.get_by_auth_id(url, user_private_key, node_url, node["nonce"], username,
-                                          user["nonce"])
+                                          userhash, user["nonce"])
 
         if result['result'] == 'error':
             print(" ~~~ TEST #1 Auth ID FAILED ~~~ ")
