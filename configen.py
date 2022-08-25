@@ -24,7 +24,10 @@ class Configen:
             "url": node["url"],
             "tariff": node["tariff"],
             "verify": node["verify"],
-            "master-user": node["master-user"]
+            "master-user": node["master-user"],
+            "period" : "7200",
+            "delta" : "1200",
+            "slots" : "10",
         }
 
         filename = "out/config/node.json"
@@ -57,7 +60,9 @@ class Configen:
             "seed": "/tmp/seed.txt",
             "seed-big": "/tmp/seed-big.txt",
             "numbers": "/tmp/numbers.json",
-            "numbers-big": "/tmp/numbers-big.json"
+            "numbers-big": "/tmp/numbers-big.json",
+            "numbers-i256": "/tmp/i256.json",
+            "numbers-h256": "/tmp/h256.json"
         }
 
         filename = "out/config/prng.json"

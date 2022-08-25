@@ -2,6 +2,7 @@ import json
 import sys
 import urllib.parse
 from lib.NessAuth import NessAuth
+from Crypto.Hash import MD5
 
 
 class AuthTester:
@@ -29,8 +30,13 @@ class AuthTester:
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
+        h = MD5.new()
+        userhash = username + '-' + node_url + '-' + node["nonce"]
+        h.update(userhash.encode('utf8'))
+        userhash = h.hexdigest()
+
         result = ness_auth.get_by_auth_id(node_url + "/prng/seed", user_private_key, node_url, node["nonce"], username,
-                                          user["nonce"])
+                                          userhash, user["nonce"])
 
         if result['result'] == 'error':
             print(" ~~~ FAILED ~~~ ")
@@ -40,7 +46,7 @@ class AuthTester:
             print(result['data']['seed'])
 
         result = ness_auth.get_by_auth_id(node_url + "/prng/seedb", user_private_key, node_url, node["nonce"], username,
-                                          user["nonce"])
+                                          userhash, user["nonce"])
 
         if result['result'] == 'error':
             print(" ~~~ FAILED ~~~ ")
@@ -50,7 +56,7 @@ class AuthTester:
             print(result['data']['seedb'])
 
         result = ness_auth.get_by_auth_id(node_url + "/prng/numbers", user_private_key, node_url, node["nonce"], username,
-                                          user["nonce"])
+                                          userhash, user["nonce"])
 
         if result['result'] == 'error':
             print(" ~~~ FAILED ~~~ ")
@@ -60,7 +66,7 @@ class AuthTester:
             print(result['data']['numbers'])
 
         result = ness_auth.get_by_auth_id(node_url + "/prng/numbersb", user_private_key, node_url, node["nonce"], username,
-                                          user["nonce"])
+                                          userhash, user["nonce"])
 
         if result['result'] == 'error':
             print(" ~~~ FAILED ~~~ ")
@@ -68,6 +74,26 @@ class AuthTester:
         else:
             print(" *** NUMBERS BIG OK !!! *** ")
             print(result['data']['numbersb'])
+
+        result = ness_auth.get_by_auth_id(node_url + "/prng/i256", user_private_key, node_url, node["nonce"], username,
+                                          userhash, user["nonce"])
+
+        if result['result'] == 'error':
+            print(" ~~~ FAILED ~~~ ")
+            print(result['error'])
+        else:
+            print(" *** NUMBERS i256 OK !!! *** ")
+            print(result['data']['numbers'])
+
+        result = ness_auth.get_by_auth_id(node_url + "/prng/h256", user_private_key, node_url, node["nonce"], username,
+                                          userhash, user["nonce"])
+
+        if result['result'] == 'error':
+            print(" ~~~ FAILED ~~~ ")
+            print(result['error'])
+        else:
+            print(" *** NUMBERS h256 OK !!! *** ")
+            print(result['data']['numbers'])
 
 
         return True
