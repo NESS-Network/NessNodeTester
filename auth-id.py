@@ -31,21 +31,10 @@ class Auth:
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
-        h = MD5.new()
-        userhash = username + '-' + node_url + '-' + node["nonce"]
-        h.update(userhash.encode('utf8'))
-        userhash = h.hexdigest()
-
-        print('*** Userhash ***')
-        print(userhash)
-
         auth_id = ness_auth.auth_id(user_private_key, node_url, node["nonce"], username, user["nonce"])
 
         print('*** User Auth ID ***')
         print(auth_id)
-
-        print('*** URL ***')
-        print(url + "/" + userhash + "/" + urllib.parse.quote_plus(auth_id))
 
         return True
 
@@ -53,6 +42,9 @@ class Auth:
 if len(sys.argv) == 3:
     tester = Auth()
     tester.run(sys.argv[1], sys.argv[2])
+elif len(sys.argv) == 4:
+    tester = Auth()
+    tester.run(sys.argv[1], sys.argv[2], sys.argv[3])
 else:
     print('Show Userhash and AuthID')
     print('Usage: python auth-id.py <username> <node URL>')

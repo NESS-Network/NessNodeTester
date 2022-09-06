@@ -31,13 +31,7 @@ class AuthTester:
 
         user_private_key = user['keys']["private"][user['keys']['current']]
 
-        h = MD5.new()
-        userhash = username + '-' + node_url + '-' + node["nonce"]
-        h.update(userhash.encode('utf8'))
-        userhash = h.hexdigest()
-
-        result = ness_auth.get_by_auth_id(url, user_private_key, node_url, node["nonce"], username,
-                                          userhash, user["nonce"])
+        result = ness_auth.get_by_auth_id(url, user_private_key, node_url, node["nonce"], username, username, user["nonce"])
 
         if result['result'] == 'error':
             print(" ~~~ TEST #1 Auth ID FAILED ~~~ ")
@@ -60,6 +54,72 @@ class AuthTester:
             else:
                 print(" ~~~ TEST #2 Two way encryption FAILED ~~~ ")
                 print(" Verifying signature failed ")
+
+                return False
+
+        url = node_url + "/node/joined"
+
+        result = ness_auth.get_by_two_way_encryption(url, 'test', node['public'], user_private_key, username)
+
+        if result['result'] == 'error':
+            print(" ~~~ TEST #3 Registration check FAILED ~~~ ")
+            print(result['error'])
+        else:
+            if ness_auth.verify_two_way_result(node['verify'], result):
+                print(" *** TEST #3 Registration check OK !!! *** ")
+                result = ness_auth.decrypt_two_way_result(result, user_private_key)
+                data = json.loads(result)
+
+                if data['joined']:
+                    shadowname = data['shadowname']
+                    print(" *** The user:" + username + " is joined with shadowname:" + shadowname + " OK !!! ***")
+                else:
+                    print("The user:" + username + " is not joined yet.")
+
+                    url = node_url + "/node/join"
+
+                    result = ness_auth.get_by_two_way_encryption(url, test_string, node['public'], user_private_key, username)
+
+                    if result['result'] == 'error':
+                        print(" ~~~ TEST #3.1 Registration FAILED ~~~ ")
+                        print(result['error'])
+                    else:
+                        print(" *** TEST #3.1 Registration OK *** ")
+                        data = json.loads(result)
+                        shadowname = data['shadowname']
+
+
+                url = node_url + "/node/test/auth-shadow"
+
+                result = ness_auth.get_by_auth_id(url, user_private_key, node_url, node["nonce"], username, shadowname, user["nonce"])
+
+                if result['result'] == 'error':
+                    print(" ~~~ TEST #4 Auth ID with shadowname FAILED ~~~ ")
+                    print(result['error'])
+                else:
+                    print(" *** TEST #4 Auth ID with shadowname OK !!! *** ")
+                    print(result['message'])
+
+                test_string = 'Whoever knows how to take, to defend, the thing, to him belongs property'
+
+                result = ness_auth.get_by_two_way_encryption(url, test_string, node['public'], user_private_key, shadowname)
+
+                if result['result'] == 'error':
+                    print(" ~~~ TEST #5 Two way encryption FAILED ~~~ ")
+                    print(result['error'])
+                else:
+                    if ness_auth.verify_two_way_result(node['verify'], result):
+                        print(" *** TEST #5 Two way encryption OK !!! *** ")
+                        print(ness_auth.decrypt_two_way_result(result, user_private_key))
+                    else:
+                        print(" ~~~ TEST #5 Two way encryption FAILED ~~~ ")
+                        print(" Verifying signature failed ")
+
+            else:
+                print(" ~~~ TEST #3 Registration check FAILED ~~~ ")
+                print(" Verifying signature failed ")
+
+        url = node_url + "/node/test/auth-shadow"
 
         return True
 
