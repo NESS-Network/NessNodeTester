@@ -85,8 +85,7 @@ class AuthTester:
                         print(result['error'])
                     else:
                         print(" *** TEST #3.1 Registration OK *** ")
-                        data = json.loads(result)
-                        shadowname = data['shadowname']
+                        shadowname = result['shadowname']
 
 
                 url = node_url + "/node/test/auth-shadow"
