@@ -87,7 +87,10 @@ class AuthTester:
                         if ness_auth.verify_two_way_result(node['verify'], result):
                             print(" *** TEST #3.1 Registration OK *** ")
                             result = ness_auth.decrypt_two_way_result(result, user_private_key)
-                            shadowname = result['shadowname']
+                            data = json.loads(result)
+                            shadowname = data['shadowname']
+                            addr = data['address']
+                            print("User registered with shadowname:" + shadowname + " and addr:" + addr)
                         else:
                             print(" ~~~ TEST #3.1 Registration FAILED ~~~ ")
                             print(" Verifying signature failed ")
