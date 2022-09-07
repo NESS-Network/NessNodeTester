@@ -84,8 +84,13 @@ class AuthTester:
                         print(" ~~~ TEST #3.1 Registration FAILED ~~~ ")
                         print(result['error'])
                     else:
-                        print(" *** TEST #3.1 Registration OK *** ")
-                        shadowname = result['shadowname']
+                        if ness_auth.verify_two_way_result(node['verify'], result):
+                            print(" *** TEST #3.1 Registration OK *** ")
+                            result = ness_auth.decrypt_two_way_result(result, user_private_key)
+                            shadowname = result['shadowname']
+                        else:
+                            print(" ~~~ TEST #3.1 Registration FAILED ~~~ ")
+                            print(" Verifying signature failed ")
 
 
                 url = node_url + "/node/test/auth-shadow"
