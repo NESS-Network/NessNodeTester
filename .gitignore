@@ -6,5 +6,6 @@ in/config/*.json
 test.py
 venv
 venv/*
+files/*
 .idea
 *__pycache__*

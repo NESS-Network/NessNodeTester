@@ -36,6 +36,11 @@ class Auth:
         print('*** User Auth ID ***')
         print(auth_id)
 
+        alt_id = ness_auth.alternative_id(user_private_key, node_url, node["nonce"], username, user["nonce"])
+
+        print('*** User Alternative ID ***')
+        print(alt_id)
+        
         return True
 
 

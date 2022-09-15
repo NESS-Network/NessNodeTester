@@ -36,9 +36,24 @@ class NessAuth:
 
         return json.loads(requests.get(url).text)
 
+    def post_data_by_auth_id(self, data: bytes, node_full_url: str, user_private_key: str, node_url: str, node_nonce: str, username: str, shadowname: str,
+                       user_nonce: str):
+        auth_id = self.auth_id(user_private_key, node_url, node_nonce, username, user_nonce)
+
+        url = node_full_url + "/" + shadowname + "/" + urllib.parse.quote_plus(auth_id)
+        result = requests.post(url, data = data).text
+        return json.loads(result)
+
+    def get_responce_by_auth_id(self, node_full_url: str, user_private_key: str, node_url: str, node_nonce: str, username: str, shadowname: str,
+                       user_nonce: str, headers):
+        auth_id = self.auth_id(user_private_key, node_url, node_nonce, username, user_nonce)
+
+        url = node_full_url + "/" + shadowname + "/" + urllib.parse.quote_plus(auth_id)
+        return requests.get(url, headers=headers, stream=True, verify=False)
+
 
     def get_by_two_way_encryption(self, node_full_url: str, data: str, node_public_key: str, user_private_key: str,
-                                  username: str):
+                                  username: str, additional_params = {}):
         """
         Authenticate user by Two-Way encription and return data from the node
         
@@ -58,9 +73,11 @@ class NessAuth:
         signature = self.sign(user_private_key, encrypted_data)
 
         url = node_full_url
-        # print(requests.post(url, {'data': encrypted_data, 'sig': signature, 'username': username}).text)
+        params = {'data': encrypted_data, 'sig': signature, 'username': username}
+        params.update(additional_params)
+
         return json.loads(
-            requests.post(url, {'data': encrypted_data, 'sig': signature, 'username': username}).text
+            requests.post(url, params).text
         )
 
     def verify_two_way_result(self, node_verify_key: str, result: dict):
@@ -103,6 +120,24 @@ class NessAuth:
         :return: The auth_id is being returned.
         """
         message = node_url + "-" + node_nonce + "-" + username + '-' + user_nonce
+        return self.sign(private_key, message)
+
+    def alternative_id(self, private_key: str, node_url, node_nonce: str, username: str, user_nonce: str):
+        """
+        `auth_id` returns Authentication ID neede for user to authenticate to node
+        
+        :param private_key: The private key of the user
+        :type private_key: str
+        :param node_url: The URL of the node you're connecting to
+        :param node_nonce: cryptographic salt
+        :type node_nonce: str
+        :param username: The username of the user you want to authenticate
+        :type username: str
+        :param user_nonce: cryptographic salt
+        :type user_nonce: str
+        :return: The auth_id is being returned.
+        """
+        message = node_url + "-" + node_nonce + "-" + username + '-' + user_nonce + '-alternative'
         return self.sign(private_key, message)
 
     def sign(self, private_key: str, data: str):
