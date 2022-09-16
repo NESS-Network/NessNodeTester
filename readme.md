@@ -84,6 +84,23 @@ Usage: `python test-user.py <username> <node URL>`
 <node URL> - node URL
 <username> - Your username
 ```
+###  test_files.py
+Test Files service
+
+Usage:
+```
+Test Files Service
+python test-auth.py <username> <node URL> quota --- show users quota (free,used,total)
+python test-auth.py <username> <node URL> list --- users files list
+python test-auth.py <username> <node URL> upload <filename> --- upload filename to node (with resume)
+python test-auth.py <username> <node URL> fileinfo <file_id> --- fileinfo on uploaded file (includes links for download (dl) and public link (pub))
+python test-auth.py <username> <node URL> download <file_id> --- download uploaded file (with resume)
+```
+```
+<node URL> - node URL
+<username> - Your username
+<file_id> - Hash of file name (returned by fileinfo or list commands)
+```
 ## Instalation
 `pip install requests pynacl pycryptodome validators lxml`
 

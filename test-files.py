@@ -314,8 +314,8 @@ elif len(sys.argv) == 5 and sys.argv[3] == 'remove':
     tester.remove(sys.argv[1], sys.argv[2], sys.argv[4])
 else:
     print('Usage:')
-    print('python test-auth.py <username> <node URL> quota --- show users quota (free,used,total)')
-    print('python test-auth.py <username> <node URL> list --- users files list')
-    print('python test-auth.py <username> <node URL> upload <filename> --- upload filename to node')
-    print('python test-auth.py <username> <node URL> fileinfo <file_id> --- fileinfo on uploaded file')
-    print('python test-auth.py <username> <node URL> download <file_id> --- download uploaded file')
+    print('python test-files.py <username> <node URL> quota --- show users quota (free,used,total)')
+    print('python test-files.py <username> <node URL> list --- users files list')
+    print('python test-files.py <username> <node URL> upload <filename> --- upload filename to node')
+    print('python test-files.py <username> <node URL> fileinfo <file_id> --- fileinfo on uploaded file')
+    print('python test-files.py <username> <node URL> download <file_id> --- download uploaded file')
