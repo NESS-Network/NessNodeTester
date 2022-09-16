@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import urllib.parse
+from Crypto.Random import get_random_bytes
 
 print('Configen')
 print('Generates node config from previously generated node by Codegen')
@@ -75,6 +76,16 @@ class Configen:
         f = open(filename, "w")
         f.write(json.dumps(users_addresses, indent=4, sort_keys=True))
         os.chmod(filename, 0o666)
+
+        config_files = {
+            "dir": "storage",
+            "quota": "100MB",
+            "salt": b64encode(get_random_bytes(16)).decode('utf-8'),
+        }
+
+        filename = "out/config/files.json"
+        f = open(filename, "w")
+        f.write(json.dumps(config_files, indent=4, sort_keys=True))
 
 
 if len(sys.argv) == 2:
